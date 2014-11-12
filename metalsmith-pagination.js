@@ -24,7 +24,15 @@ module.exports = function (opts) {
 
     // Iterate over all the paginate names and match with collections.
     var complete = keys.every(function (name) {
-      var collection = toFn(name)(metadata);
+      var collection;
+
+      try {
+        collection = toFn(name)(metadata);
+      } catch (e) {
+        done(e);
+
+        return false;
+      }
 
       // Throw an error if the collection does not exist.
       if (!collection) {
