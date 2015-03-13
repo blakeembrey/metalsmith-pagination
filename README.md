@@ -1,9 +1,9 @@
 # Metalsmith Pagination
 
 [![NPM version][npm-image]][npm-url]
+[![NPM downloads][downloads-image]][downloads-url]
 [![Build status][travis-image]][travis-url]
 [![Test coverage][coveralls-image]][coveralls-url]
-[![Gittip][gittip-image]][gittip-url]
 
 A [Metalsmith](http://metalsmith.io/) plugin for paginating arrays and [collections](https://github.com/segmentio/metalsmith-collections).
 
@@ -44,9 +44,9 @@ Install via npm and then add `metalsmith-pagination` to your `metalsmith.json`:
 Install via npm, require the module and `.use` the result of the function.
 
 ```js
-var paginate = require('metalsmith-pagination');
+var pagination = require('metalsmith-pagination')
 
-metalsmith.use(paginate({
+metalsmith.use(pagination({
   'collections.articles': {
     perPage: 5,
     template: 'index.jade',
@@ -56,7 +56,7 @@ metalsmith.use(paginate({
       title: 'Archive'
     }
   }
-}));
+}))
 ```
 
 ### Page Metadata
@@ -67,13 +67,13 @@ The `pageMetadata` option is optional. An object passed as `pageMetadata` is use
 
 Within the template you specified, you will have access to pagination specific helpers:
 
-| Property            | Description                                    |
-|---------------------|------------------------------------------------|
-| `pagination.num`    | The current page number.                       |
-| `pagination.files`  | All the files on the current page.             |
-| `paginate.pages`    | A link to all the pages in the collection.     |
-| `paginate.next`     | Links to the next page file, if it exists.     |
-| `paginate.previous` | Links to the previous page file, if it exists. |
+| Property              | Description                                    |
+|-----------------------|------------------------------------------------|
+| `pagination.num`      | The current page number.                       |
+| `pagination.files`    | All the files on the current page.             |
+| `pagination.pages`    | A link to all the pages in the collection.     |
+| `pagination.next`     | Links to the next page file, if it exists.     |
+| `pagination.previous` | Links to the previous page file, if it exists. |
 
 ## License
 
@@ -81,9 +81,9 @@ MIT
 
 [npm-image]: https://img.shields.io/npm/v/metalsmith-pagination.svg?style=flat
 [npm-url]: https://npmjs.org/package/metalsmith-pagination
+[downloads-image]: https://img.shields.io/npm/dm/metalsmith-pagination.svg?style=flat
+[downloads-url]: https://npmjs.org/package/metalsmith-pagination
 [travis-image]: https://img.shields.io/travis/blakeembrey/metalsmith-pagination.svg?style=flat
 [travis-url]: https://travis-ci.org/blakeembrey/metalsmith-pagination
 [coveralls-image]: https://img.shields.io/coveralls/blakeembrey/metalsmith-pagination.svg?style=flat
 [coveralls-url]: https://coveralls.io/r/blakeembrey/metalsmith-pagination?branch=master
-[gittip-image]: https://img.shields.io/gittip/blakeembrey.svg?style=flat
-[gittip-url]: https://www.gittip.com/blakeembrey
