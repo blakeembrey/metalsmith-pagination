@@ -30,6 +30,7 @@ Install via npm and then add `metalsmith-pagination` to your `metalsmith.json`:
         "template": "index.jade",
         "first": "index.html",
         "path": "page/:num/index.html",
+        "filter": 'private !== true',
         "pageMetadata": {
           "title": "Archive"
         }
@@ -52,6 +53,9 @@ metalsmith.use(pagination({
     template: 'index.jade',
     first: 'index.html',
     path: 'page/:num/index.html',
+    filter: function (page) {
+      return !page.private
+    },
     pageMetadata: {
       title: 'Archive'
     }
