@@ -1,4 +1,4 @@
-/* global describe, it */
+/* global describe, it, beforeEach */
 
 var expect = require('chai').expect
 var paginate = require('./')
@@ -19,7 +19,7 @@ function instance (metadata) {
 
 describe('metalsmith collections paginate', function () {
   describe('multiple pages', function () {
-    var files = {}
+    var files
 
     var metadata = {
       collections: {
@@ -36,6 +36,10 @@ describe('metalsmith collections paginate', function () {
     }
 
     var metalsmith = instance(metadata)
+
+    beforeEach(function () {
+      files = {}
+    })
 
     it('should split a collection into individual files', function (done) {
       return paginate({
@@ -119,6 +123,126 @@ describe('metalsmith collections paginate', function () {
         return done(err)
       })
     })
+
+  })
+
+  describe('filtering', function () {
+    var files
+
+    var metadata = {
+      collections: {
+        articles: [
+          { contents: '', hide: true },
+          { contents: '', hide: true },
+          { contents: '', hide: true },
+          { contents: '', hide: false },
+          { contents: '', hide: false },
+          { contents: '', hide: false },
+          { contents: '', hide: false }
+        ]
+      }
+    }
+
+    var metalsmith = instance(metadata)
+
+    beforeEach(function () {
+      files = {}
+    })
+
+    it('should use all pages without filters', function (done) {
+      return paginate({
+        'collections.articles': {
+          perPage: 3,
+          template: 'index.jade',
+          first: 'articles/index.html',
+          path: 'articles/page/:num/index.html'
+        }
+      })(files, metalsmith, function (err) {
+        var firstPage = files['articles/index.html']
+        var pageOne = files['articles/page/1/index.html']
+        var pageTwo = files['articles/page/2/index.html']
+        var pageThree = files['articles/page/3/index.html']
+
+        expect(firstPage).to.exist
+        expect(firstPage.pagination.files.length).to.equal(3)
+
+        expect(pageOne).to.exist
+        expect(pageOne.pagination.files.length).to.equal(3)
+
+        expect(pageTwo).to.exist
+        expect(pageTwo.pagination.files.length).to.equal(3)
+
+        expect(pageThree).to.exist
+        expect(pageThree.pagination.files.length).to.equal(1)
+
+        return done(err)
+      })
+    })
+
+    it('should filter using to-function when a string or object is provided', function (done) {
+      return paginate({
+        'collections.articles': {
+          perPage: 3,
+          template: 'index.jade',
+          first: 'articles/index.html',
+          filter: {
+            hide: false
+          },
+          path: 'articles/page/:num/index.html'
+        }
+      })(files, metalsmith, function (err) {
+        var firstPage = files['articles/index.html']
+        var pageOne = files['articles/page/1/index.html']
+        var pageTwo = files['articles/page/2/index.html']
+        var pageThree = files['articles/page/3/index.html']
+
+        expect(firstPage).to.exist
+        expect(firstPage.pagination.files.length).to.equal(3)
+
+        expect(pageOne).to.exist
+        expect(pageOne.pagination.files.length).to.equal(3)
+
+        expect(pageTwo).to.exist
+        expect(pageTwo.pagination.files.length).to.equal(1)
+
+        expect(pageThree).to.not.exist
+
+        return done(err)
+      })
+    })
+
+    it('should filter using a provided function', function (done) {
+      return paginate({
+        'collections.articles': {
+          perPage: 3,
+          template: 'index.jade',
+          first: 'articles/index.html',
+          filter: function (page) {
+            return !page.hide
+          },
+          path: 'articles/page/:num/index.html'
+        }
+      })(files, metalsmith, function (err) {
+        var firstPage = files['articles/index.html']
+        var pageOne = files['articles/page/1/index.html']
+        var pageTwo = files['articles/page/2/index.html']
+        var pageThree = files['articles/page/3/index.html']
+
+        expect(firstPage).to.exist
+        expect(firstPage.pagination.files.length).to.equal(3)
+
+        expect(pageOne).to.exist
+        expect(pageOne.pagination.files.length).to.equal(3)
+
+        expect(pageTwo).to.exist
+        expect(pageTwo.pagination.files.length).to.equal(1)
+
+        expect(pageThree).to.not.exist
+
+        return done(err)
+      })
+    })
+
   })
 
   describe('missing array error', function () {

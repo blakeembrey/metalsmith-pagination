@@ -42,9 +42,17 @@ module.exports = function (opts) {
       }
 
       var pageOpts = extend({}, DEFAULTS, opts[name])
+      var toShow = collection
+
+      if (typeof pageOpts.filter === 'function') {
+        toShow = collection.filter(pageOpts.filter)
+      } else if (pageOpts.filter) {
+        toShow = collection.filter(toFn(pageOpts.filter))
+      }
+
       var perPage = pageOpts.perPage
       var pages = collection.pages = []
-      var numPages = Math.ceil(collection.length / perPage)
+      var numPages = Math.ceil(toShow.length / perPage)
 
       if (!pageOpts.template) {
         done(new Error('Specify a template for "' + name + '" pages'))
@@ -60,7 +68,7 @@ module.exports = function (opts) {
 
       // Iterate over every page and generate a pages array.
       for (var i = 0; i < numPages; i++) {
-        var pageFiles = collection.slice(i * perPage, (i + 1) * perPage)
+        var pageFiles = toShow.slice(i * perPage, (i + 1) * perPage)
 
         // Create the pagination object for the current page.
         var pagination = {
