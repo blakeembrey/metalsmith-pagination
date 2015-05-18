@@ -54,8 +54,15 @@ module.exports = function (opts) {
       var pages = collection.pages = []
       var numPages = Math.ceil(toShow.length / perPage)
 
-      if (!pageOpts.template) {
-        done(new Error('Specify a template for "' + name + '" pages'))
+      if (!pageOpts.template && !pageOpts.layout) {
+        done(new Error('Specify a template or layout for "' + name + '" pages'))
+
+        return false
+      }
+
+      if (pageOpts.template && pageOpts.layout) {
+        done(new Error('You should not specify template and layout for "' +
+          name + '" pages simultaneosly'))
 
         return false
       }
@@ -80,6 +87,7 @@ module.exports = function (opts) {
         // Generate a new file based on the filename with correct metadata.
         var page = extend({}, pageOpts.pageMetadata, {
           template: pageOpts.template,
+          layout: pageOpts.layout,
           contents: new Buffer(''),
           path: interpolate(pageOpts.path, pagination),
           pagination: pagination
