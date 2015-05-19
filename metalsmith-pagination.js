@@ -36,7 +36,7 @@ module.exports = function (opts) {
 
       // Throw an error if the collection does not exist.
       if (!collection) {
-        done(new Error('Collection "' + name + '" does not exist'))
+        done(new TypeError('Collection "' + name + '" does not exist'))
 
         return false
       }
@@ -55,20 +55,20 @@ module.exports = function (opts) {
       var numPages = Math.ceil(toShow.length / perPage)
 
       if (!pageOpts.template && !pageOpts.layout) {
-        done(new Error('Specify a template or layout for "' + name + '" pages'))
+        done(new TypeError('Specify a template or layout for "' + name + '" pages'))
 
         return false
       }
 
       if (pageOpts.template && pageOpts.layout) {
-        done(new Error('You should not specify template and layout for "' +
+        done(new TypeError('You should not specify template and layout for "' +
           name + '" pages simultaneosly'))
 
         return false
       }
 
       if (!pageOpts.path) {
-        done(new Error('Specify a path for "' + name + '" pages'))
+        done(new TypeError('Specify a path for "' + name + '" pages'))
 
         return false
       }
