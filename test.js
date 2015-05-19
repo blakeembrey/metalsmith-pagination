@@ -263,41 +263,52 @@ describe('metalsmith collections paginate', function () {
   })
 
   describe('options error', function () {
-    var files = {}
-
-    var metalsmith = instance({
-      collections: {
-        articles: []
-      }
-    })
-
     it('should error when a template is not specified', function (done) {
       return paginate({
         'collections.articles': {}
-      })(files, metalsmith, function (err) {
+      })({}, instance({
+        collections: {
+          articles: []
+        }
+      }), function (err) {
         expect(err).to.exist
+        expect(err.message).to.equal('Specify a template or layout for "collections.articles" pages')
 
         return done()
       })
     })
-  })
 
-  describe('path error', function () {
-    var files = {}
-
-    var metalsmith = instance({
-      collections: {
-        articles: []
-      }
-    })
-
-    it('should error when a template is not specified', function (done) {
+    it('should error when the path is not specified', function (done) {
       return paginate({
         'collections.articles': {
           template: 'index.jade'
         }
-      })(files, metalsmith, function (err) {
+      })({}, instance({
+        collections: {
+          articles: []
+        }
+      }), function (err) {
         expect(err).to.exist
+        expect(err.message).to.equal('Specify a path for "collections.articles" pages')
+
+        return done()
+      })
+    })
+
+    it('should error when layout and template are specified', function (done) {
+      return paginate({
+        'collections.articles': {
+          template: 'index.jade',
+          layout: 'index.jade',
+          path: 'foobar'
+        }
+      })({}, instance({
+        collections: {
+          articles: []
+        }
+      }), function (err) {
+        expect(err).to.exist
+        expect(err.message).to.equal('You should not specify template and layout for "collections.articles" pages simultaneosly')
 
         return done()
       })
