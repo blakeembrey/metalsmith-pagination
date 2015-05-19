@@ -9,7 +9,7 @@ A [Metalsmith](http://metalsmith.io/) plugin for paginating arrays and [collecti
 
 ## Installation
 
-```sh
+```
 npm install metalsmith-pagination --save
 ```
 
@@ -51,6 +51,9 @@ metalsmith.use(pagination({
   'collections.articles': {
     perPage: 5,
     template: 'index.jade',
+    // Do not use `layout` in conjunction with `template`.
+    // This option is useful if you use `metalsmith-layouts`.
+    layout: 'index.jade',
     first: 'index.html',
     path: 'page/:num/index.html',
     filter: function (page) {
