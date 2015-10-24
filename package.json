@@ -36,7 +36,7 @@
     "standard": "^2.11.0"
   },
   "dependencies": {
-    "extend": "^2.0.0",
-    "to-function": "^2.0.5"
+    "to-function": "^2.0.5",
+    "xtend": "^4.0.0"
   }
 }

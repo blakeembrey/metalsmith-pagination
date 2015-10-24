@@ -1,5 +1,5 @@
 var toFn = require('to-function')
-var extend = require('extend')
+var extend = require('xtend')
 
 /**
  * Page collection defaults.
@@ -7,17 +7,19 @@ var extend = require('extend')
  * @type {Object}
  */
 var DEFAULTS = {
-  perPage: 10
+  perPage: 10,
+  noPageOne: false,
+  pageContents: new Buffer('')
 }
 
 /**
  * Paginate based on the collection.
  *
- * @param  {Object}   opts
+ * @param  {Object}   options
  * @return {Function}
  */
-module.exports = function (opts) {
-  var keys = Object.keys(opts)
+module.exports = function (options) {
+  var keys = Object.keys(options)
 
   return function (files, metalsmith, done) {
     var metadata = metalsmith.metadata()
@@ -26,94 +28,114 @@ module.exports = function (opts) {
     var complete = keys.every(function (name) {
       var collection
 
+      // Catch nested collection reference errors.
       try {
         collection = toFn(name)(metadata)
-      } catch (e) {
-        done(e)
+      } catch (error) {}
 
-        return false
-      }
-
-      // Throw an error if the collection does not exist.
       if (!collection) {
-        done(new TypeError('Collection "' + name + '" does not exist'))
+        done(new TypeError('Collection not found (' + name + ')'))
 
         return false
       }
 
-      var pageOpts = extend({}, DEFAULTS, opts[name])
+      var pageOptions = extend(DEFAULTS, options[name])
       var toShow = collection
+      var groupBy = toFn(pageOptions.groupBy || groupByPagination)
 
-      if (typeof pageOpts.filter === 'function') {
-        toShow = collection.filter(pageOpts.filter)
-      } else if (pageOpts.filter) {
-        toShow = collection.filter(toFn(pageOpts.filter))
+      if (pageOptions.filter) {
+        toShow = collection.filter(toFn(pageOptions.filter))
       }
 
-      var perPage = pageOpts.perPage
+      if (!pageOptions.template && !pageOptions.layout) {
+        done(new TypeError('A template or layout is required (' + name + ')'))
+
+        return false
+      }
+
+      if (pageOptions.template && pageOptions.layout) {
+        done(new TypeError(
+          'Template and layout can not be used simultaneosly (' + name + ')'
+        ))
+
+        return false
+      }
+
+      if (!pageOptions.path) {
+        done(new TypeError('The path is required (' + name + ')'))
+
+        return false
+      }
+
+      // Can't specify both
+      if (pageOptions.noPageOne && !pageOptions.first) {
+        done(new TypeError(
+          'When `noPageOne` is enabled, a first page must be set (' + name + ')'
+        ))
+
+        return false
+      }
+
+      // Put a `pages` property on the original collection.
       var pages = collection.pages = []
-      var numPages = Math.ceil(toShow.length / perPage)
+      var pageMap = {}
 
-      if (!pageOpts.template && !pageOpts.layout) {
-        done(new TypeError('Specify a template or layout for "' + name + '" pages'))
+      // Sort pages into "categories".
+      toShow.forEach(function (file, index) {
+        var name = groupBy(file, index, pageOptions).toString()
 
-        return false
-      }
+        // Keep pages in the order they are returned. E.g. Allows sorting
+        // by published year to work.
+        if (!pageMap.hasOwnProperty(name)) {
+          // Use the index to calculate pagination, page numbers, etc.
+          var length = pages.length
 
-      if (pageOpts.template && pageOpts.layout) {
-        done(new TypeError('You should not specify template and layout for "' +
-          name + '" pages simultaneosly'))
+          var pagination = {
+            name: name,
+            num: length + 1,
+            pages: pages,
+            files: []
+          }
 
-        return false
-      }
-
-      if (!pageOpts.path) {
-        done(new TypeError('Specify a path for "' + name + '" pages'))
-
-        return false
-      }
-
-      // Iterate over every page and generate a pages array.
-      for (var i = 0; i < numPages; i++) {
-        var pageFiles = toShow.slice(i * perPage, (i + 1) * perPage)
-
-        // Create the pagination object for the current page.
-        var pagination = {
-          num: i + 1,
-          pages: pages,
-          files: extend(pageFiles, { metadata: collection.metadata })
-        }
-
-        // Generate a new file based on the filename with correct metadata.
-        var page = extend({}, pageOpts.pageMetadata, {
-          template: pageOpts.template,
-          layout: pageOpts.layout,
-          contents: new Buffer(''),
-          path: interpolate(pageOpts.path, pagination),
-          pagination: pagination
-        })
-
-        // Create the file.
-        files[page.path] = page
-
-        // Update next/prev references.
-        if (i > 0) {
-          page.pagination.previous = pages[i - 1]
-          pages[i - 1].pagination.next = page
-        }
-
-        // When the first page option is set, render it over the top of the
-        // canonically generated page.
-        if (i === 0 && pageOpts.first) {
-          page = extend({}, page, {
-            path: interpolate(pageOpts.first, page.pagination)
+          // Generate the page data.
+          var page = extend(pageOptions.pageMetadata, {
+            template: pageOptions.template,
+            layout: pageOptions.layout,
+            contents: pageOptions.pageContents,
+            path: interpolate(pageOptions.path, pagination),
+            pagination: pagination
           })
 
-          files[page.path] = page
+          // Copy collection metadata onto every page "collection".
+          pagination.files.metadata = collection.metadata
+
+          if (length === 0) {
+            if (!pageOptions.noPageOne) {
+              files[page.path] = page
+            }
+
+            if (pageOptions.first) {
+              // Extend the "first page" over the top of "page one".
+              page = extend(page, {
+                path: interpolate(pageOptions.first, page.pagination)
+              })
+
+              files[page.path] = page
+            }
+          } else {
+            files[page.path] = page
+
+            page.pagination.previous = pages[length - 1]
+            pages[length - 1].pagination.next = page
+          }
+
+          pages.push(page)
+          pageMap[name] = pagination
         }
 
-        pages.push(page)
-      }
+        // Files are kept sorted within their own category.
+        pageMap[name].files.push(file)
+      })
 
       return true
     })
@@ -126,9 +148,23 @@ module.exports = function (opts) {
  * Interpolate the page path with pagination variables.
  *
  * @param  {String} path
- * @param  {Object} opts
+ * @param  {Object} data
  * @return {String}
  */
-function interpolate (path, opts) {
-  return path.replace(/:num/g, opts.num)
+function interpolate (path, data) {
+  return path.replace(/:(\w+)/g, function (match, param) {
+    return data[param]
+  })
+}
+
+/**
+ * Group by pagination by default.
+ *
+ * @param  {Object} file
+ * @param  {number} index
+ * @param  {Object} options
+ * @return {number}
+ */
+function groupByPagination (file, index, options) {
+  return Math.ceil((index + 1) / options.perPage)
 }
