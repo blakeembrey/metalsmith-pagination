@@ -72,6 +72,9 @@ metalsmith.use(pagination({
 * **path** The path to render every page under.
 * **filter** A string or function used to filter files in pagination.
 * **pageMetadata** The metadata to merge with every page.
+* **noPageOne** Set to true to disable rendering of page one, useful in conjunction with first (default: `false`).
+* **pageContents** Set the contents of generated pages (default: `new Buffer('')`). Useful for [metalsmith-in-place](https://npmjs.org/package/metalsmith-in-place) (especially with `pageMetadata`).
+* **groupBy** Set the grouping algorithm manually (default: paginated by `perPage`). Useful for paginating by other factors, like year published (E.g. `date.getFullYear()`).
 
 ### Page Metadata
 
@@ -82,6 +85,7 @@ The `pageMetadata` option is optional. The object passed as `pageMetadata` is me
 Within the template you specified, you will have access to pagination specific helpers:
 
 * **pagination.num** The current page number.
+* **pagination.name** The page name from `groupBy`. It will be the page number string with the default `groupBy`.
 * **pagination.files** All the files for the current page (E.g. an array of `x` articles).
 * **pagination.pages** Links to every page in the collection (E.g. used to render pagination numbers).
 * **pagination.next** The immediately following page, if it exists.
