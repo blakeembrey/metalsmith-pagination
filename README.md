@@ -15,9 +15,9 @@ npm install metalsmith-pagination --save
 
 ## Usage
 
-To paginate an array of files, you need to have a property that points to the location of the collection you want to paginate. The value should be an options object that will be used to initialise the plugin. For example:
+To paginate an array of files, you need to have a property that points to the location of the collection you want to paginate. The value should be an options object that will be used to initialize the plugin. For example:
 
-### CLI
+#### CLI
 
 Install via npm and then add `metalsmith-pagination` to your `metalsmith.json`:
 
@@ -40,7 +40,7 @@ Install via npm and then add `metalsmith-pagination` to your `metalsmith.json`:
 }
 ```
 
-### JavaScript
+#### JavaScript
 
 Install via npm, require the module and `.use` the result of the function.
 
@@ -51,9 +51,6 @@ metalsmith.use(pagination({
   'collections.articles': {
     perPage: 5,
     template: 'index.jade',
-    // Do not use `layout` in conjunction with `template`.
-    // This option is useful if you use `metalsmith-layouts`.
-    layout: 'index.jade',
     first: 'index.html',
     path: 'page/:num/index.html',
     filter: function (page) {
@@ -66,21 +63,29 @@ metalsmith.use(pagination({
 }))
 ```
 
+### Options
+
+* **perPage** The number of files per page (default: `10`).
+* **template** The template metadata for [metalsmith-templates](https://npmjs.org/package/metalsmith-templates).
+* **layout** The layout metadata for [metalsmith-layouts](https://npmjs.org/package/metalsmith-layouts).
+* **first** An optional path to use in place of the page one (E.g. Render as the homepage `index.html`, instead of `page/1/index.html`).
+* **path** The path to render every page under.
+* **filter** A string or function used to filter files in pagination.
+* **pageMetadata** The metadata to merge with every page.
+
 ### Page Metadata
 
-The `pageMetadata` option is optional. An object passed as `pageMetadata` is used to initialise every pages metadata. This allows you to add arbitrary metadata to every create page, such as a title variable.
+The `pageMetadata` option is optional. The object passed as `pageMetadata` is merged with the metadata of every page generated. This allows you to add arbitrary metadata to every page, such as a title variable.
 
 ### Template Usage
 
 Within the template you specified, you will have access to pagination specific helpers:
 
-| Property              | Description                                    |
-|-----------------------|------------------------------------------------|
-| `pagination.num`      | The current page number.                       |
-| `pagination.files`    | All the files on the current page.             |
-| `pagination.pages`    | A link to all the pages in the collection.     |
-| `pagination.next`     | Links to the next page file, if it exists.     |
-| `pagination.previous` | Links to the previous page file, if it exists. |
+* **pagination.num** The current page number.
+* **pagination.files** All the files for the current page (E.g. an array of `x` articles).
+* **pagination.pages** Links to every page in the collection (E.g. used to render pagination numbers).
+* **pagination.next** The immediately following page, if it exists.
+* **pagination.previous** The previous page, if it exists.
 
 ## License
 
