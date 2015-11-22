@@ -85,11 +85,14 @@ The `pageMetadata` option is optional. The object passed as `pageMetadata` is me
 Within the template you specified, you will have access to pagination specific helpers:
 
 * **pagination.num** The current page number.
-* **pagination.name** The page name from `groupBy`. It will be the page number string with the default `groupBy`.
-* **pagination.files** All the files for the current page (E.g. an array of `x` articles).
-* **pagination.pages** Links to every page in the collection (E.g. used to render pagination numbers).
-* **pagination.next** The immediately following page, if it exists.
+* **pagination.index** The current page index (`num - 1`).
+* **pagination.name** The page name from `groupBy`. If no `groupBy` was used, it is the current page number as a string.
+* **pagination.files** All the files to render in the current page (E.g. array of `x` articles).
+* **pagination.pages** References to every page in the collection (E.g. used to render pagination numbers).
+* **pagination.next** The next page, if it exists.
 * **pagination.previous** The previous page, if it exists.
+* **pagination.first** The first page, equal to `pagination.pages[0]`.
+* **pagination.last** The last page, equal to `pagination.pages[pagination.pages.length - 1]`.
 
 ## License
 

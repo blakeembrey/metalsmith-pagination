@@ -82,7 +82,7 @@ module.exports = function (options) {
 
       // Sort pages into "categories".
       toShow.forEach(function (file, index) {
-        var name = groupBy(file, index, pageOptions).toString()
+        var name = String(groupBy(file, index, pageOptions))
 
         // Keep pages in the order they are returned. E.g. Allows sorting
         // by published year to work.
@@ -92,6 +92,7 @@ module.exports = function (options) {
 
           var pagination = {
             name: name,
+            index: length,
             num: length + 1,
             pages: pages,
             files: []
@@ -135,6 +136,12 @@ module.exports = function (options) {
 
         // Files are kept sorted within their own category.
         pageMap[name].files.push(file)
+      })
+
+      // Add references to the first and last pages.
+      pages.forEach(function (page) {
+        page.pagination.first = pages[0]
+        page.pagination.last = pages[pages.length - 1]
       })
 
       return true

@@ -57,28 +57,40 @@ describe('metalsmith collections paginate', function () {
 
         expect(firstPage).to.exist
         expect(firstPage).to.not.equal(pageOne)
+        expect(firstPage.pagination.index).to.equal(0)
         expect(firstPage.pagination.num).to.equal(1)
         expect(firstPage.pagination.name).to.equal('1')
         expect(firstPage.pagination.next).to.equal(pageTwo)
         expect(firstPage.pagination.previous).to.not.exist
+        expect(firstPage.pagination.first).to.equal(firstPage)
+        expect(firstPage.pagination.last).to.equal(pageThree)
 
         expect(pageOne).to.exist
+        expect(pageOne.pagination.index).to.equal(0)
         expect(pageOne.pagination.num).to.equal(1)
         expect(pageOne.pagination.name).to.equal('1')
         expect(pageOne.pagination.next).to.equal(pageTwo)
         expect(pageOne.pagination.previous).to.not.exist
+        expect(pageOne.pagination.first).to.equal(firstPage)
+        expect(pageOne.pagination.last).to.equal(pageThree)
 
         expect(pageTwo).to.exist
+        expect(pageTwo.pagination.index).to.equal(1)
         expect(pageTwo.pagination.num).to.equal(2)
         expect(pageTwo.pagination.name).to.equal('2')
         expect(pageTwo.pagination.next).to.equal(pageThree)
         expect(pageTwo.pagination.previous).to.equal(firstPage)
+        expect(pageTwo.pagination.first).to.equal(firstPage)
+        expect(pageTwo.pagination.last).to.equal(pageThree)
 
         expect(pageThree).to.exist
+        expect(pageThree.pagination.index).to.equal(2)
         expect(pageThree.pagination.num).to.equal(3)
         expect(pageThree.pagination.name).to.equal('3')
         expect(pageThree.pagination.next).to.not.exist
         expect(pageThree.pagination.previous).to.equal(pageTwo)
+        expect(pageThree.pagination.first).to.equal(firstPage)
+        expect(pageThree.pagination.last).to.equal(pageThree)
 
         expect(metadata.collections.articles.pages).to.have.length(3)
 
