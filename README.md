@@ -86,6 +86,7 @@ Within the template you specified, you will have access to pagination specific h
 
 * **pagination.num** The current page number.
 * **pagination.index** The current page index (`num - 1`).
+* **pagination.getPages(num)** Get an array of `num` pages with the current page as centered as possible
 * **pagination.name** The page name from `groupBy`. If no `groupBy` was used, it is the current page number as a string.
 * **pagination.files** All the files to render in the current page (E.g. array of `x` articles).
 * **pagination.pages** References to every page in the collection (E.g. used to render pagination numbers).

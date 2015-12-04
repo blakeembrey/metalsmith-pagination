@@ -95,7 +95,8 @@ module.exports = function (options) {
             index: length,
             num: length + 1,
             pages: pages,
-            files: []
+            files: [],
+            getPages: createPagesUtility(pages, length)
           }
 
           // Generate the page data.
@@ -138,8 +139,8 @@ module.exports = function (options) {
         pageMap[name].files.push(file)
       })
 
-      // Add references to the first and last pages.
-      pages.forEach(function (page) {
+      // Add page utilities.
+      pages.forEach(function (page, index) {
         page.pagination.first = pages[0]
         page.pagination.last = pages[pages.length - 1]
       })
@@ -174,4 +175,28 @@ function interpolate (path, data) {
  */
 function groupByPagination (file, index, options) {
   return Math.ceil((index + 1) / options.perPage)
+}
+
+/**
+ * Create a "get pages" utility for people to use when rendering.
+ *
+ * @param  {Array}    pages
+ * @param  {number}   index
+ * @return {Function}
+ */
+function createPagesUtility (pages, index) {
+  return function getPages (number) {
+    var offset = Math.floor(number / 2)
+    var start, end
+
+    if (index + offset >= pages.length) {
+      start = Math.max(0, pages.length - number)
+      end = pages.length
+    } else {
+      start = Math.max(0, index - offset)
+      end = Math.min(start + number, pages.length)
+    }
+
+    return pages.slice(start, end)
+  }
 }

@@ -98,6 +98,17 @@ describe('metalsmith collections paginate', function () {
         expect(firstPage.pagination.num).to.equal(1)
         expect(firstPage.pagination.pages).to.equal(metadata.collections.articles.pages)
 
+        expect(pageOne.pagination.getPages(2)).to.deep.equal([firstPage, pageTwo])
+        expect(firstPage.pagination.getPages(2)).to.deep.equal([firstPage, pageTwo])
+        expect(pageTwo.pagination.getPages(2)).to.deep.equal([firstPage, pageTwo])
+        expect(pageThree.pagination.getPages(2)).to.deep.equal([pageTwo, pageThree])
+
+        expect(pageOne.pagination.getPages(3)).to.deep.equal([firstPage, pageTwo, pageThree])
+        expect(pageTwo.pagination.getPages(3)).to.deep.equal([firstPage, pageTwo, pageThree])
+        expect(pageThree.pagination.getPages(3)).to.deep.equal([firstPage, pageTwo, pageThree])
+
+        expect(pageTwo.pagination.getPages(100)).to.deep.equal([firstPage, pageTwo, pageThree])
+
         return done(err)
       })
     })
