@@ -174,7 +174,16 @@ function interpolate (path, data) {
  * @return {number}
  */
 function groupByPagination (file, index, options) {
-  return Math.ceil((index + 1) / options.perPage)
+  // If options.perPage is a single value, all pages have the same 
+  // number of results per page
+  if (!Array.isArray(options.perPage)) {
+    return Math.ceil((index + 1) / options.perPage)
+    
+  // Otherwise options.perPage[0] is number of results for 1st page, 
+  // options.perPage[1] is number of results for all other pages
+  } else {
+    return (index < options.perPage[0] ? 1 : (Math.ceil((index - options.perPage[0] + 1) / options.perPage[1]))+1);
+  }
 }
 
 /**
