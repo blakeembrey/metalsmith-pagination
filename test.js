@@ -24,13 +24,22 @@ describe('metalsmith collections paginate', function () {
     var metadata = {
       collections: {
         articles: [
-          { contents: '' },
-          { contents: '' },
-          { contents: '' },
-          { contents: '' },
-          { contents: '' },
-          { contents: '' },
-          { contents: '' }
+          { contents: 'foobar' },
+          { contents: 'foobar' },
+          { contents: 'foobar' },
+          { contents: 'foobar' },
+          { contents: 'foobar' },
+          { contents: 'foobar' },
+          { contents: 'foobar' }
+        ],
+        articlesWithMeta: [
+          { contents: 'foobar', excerpt: 'Lorem Ipsum' },
+          { contents: 'foobar', excerpt: 'Lorem Ipsum' },
+          { contents: 'foobar', excerpt: 'Lorem Ipsum' },
+          { contents: 'foobar', excerpt: 'Lorem Ipsum' },
+          { contents: 'foobar', excerpt: 'Lorem Ipsum' },
+          { contents: 'foobar', excerpt: 'Lorem Ipsum' },
+          { contents: 'foobar', excerpt: 'Lorem Ipsum' }
         ]
       }
     }
@@ -108,6 +117,38 @@ describe('metalsmith collections paginate', function () {
         expect(pageThree.pagination.getPages(3)).to.deep.equal([firstPage, pageTwo, pageThree])
 
         expect(pageTwo.pagination.getPages(100)).to.deep.equal([firstPage, pageTwo, pageThree])
+
+        return done(err)
+      })
+    })
+
+    it('should extend metadata to each page', function (done) {
+      return paginate({
+        'collections.articlesWithMeta': {
+          perPage: 3,
+          template: 'index.jade',
+          path: 'articles/page/:num/index.html',
+          pageContents: 'foobar'
+        }
+      })(files, metalsmith, function (err) {
+        var firstPage = files['articles/index.html']
+        var pageOne = files['articles/page/1/index.html']
+        var pageTwo = files['articles/page/2/index.html']
+        var pageThree = files['articles/page/3/index.html']
+
+        expect(firstPage).to.not.exist
+
+        expect(pageOne).to.exist
+        expect(pageOne.contents).to.equal('foobar')
+        expect(pageOne.excerpt).to.equal('Lorem Ipsum')
+
+        expect(pageTwo).to.exist
+        expect(pageTwo.contents).to.equal('foobar')
+        expect(pageTwo.excerpt).to.equal('Lorem Ipsum')
+
+        expect(pageThree).to.exist
+        expect(pageThree.contents).to.equal('foobar')
+        expect(pageThree.excerpt).to.equal('Lorem Ipsum')
 
         return done(err)
       })

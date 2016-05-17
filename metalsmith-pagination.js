@@ -38,7 +38,13 @@ module.exports = function (options) {
 
         return false
       }
-
+      var fileMetadata
+      var collectionName = name.split('.')[1]
+      if (collectionName) {
+        fileMetadata = metadata['collections'][collectionName]
+      } else {
+        fileMetadata = {}
+      }
       var pageOptions = extend(DEFAULTS, options[name])
       var toShow = collection
       var groupBy = toFn(pageOptions.groupBy || groupByPagination)
@@ -99,6 +105,7 @@ module.exports = function (options) {
             getPages: createPagesUtility(pages, length)
           }
 
+          var templateData = fileMetadata[index]
           // Generate the page data.
           var page = extend(pageOptions.pageMetadata, {
             template: pageOptions.template,
@@ -106,7 +113,7 @@ module.exports = function (options) {
             contents: pageOptions.pageContents,
             path: interpolate(pageOptions.path, pagination),
             pagination: pagination
-          })
+          }, templateData)
 
           // Copy collection metadata onto every page "collection".
           pagination.files.metadata = collection.metadata
