@@ -15,9 +15,11 @@ npm install metalsmith-pagination --save
 
 ## Usage
 
-To paginate an array of files, you need to have a property that points to the location of the collection you want to paginate. The value should be an options object that will be used to initialize the plugin. For example:
+To paginate an array of files, you need to have a property that points to the location of the collection you want to paginate. The value should be an options object that will be used to initialize the plugin.
 
-#### CLI
+**P.S.** Make sure the pagination middleware is defined _after_ the files array exists, but _before_ the template middleware renders.
+
+### CLI
 
 Install via npm and then add `metalsmith-pagination` to your `metalsmith.json`:
 
@@ -40,7 +42,7 @@ Install via npm and then add `metalsmith-pagination` to your `metalsmith.json`:
 }
 ```
 
-#### JavaScript
+### JavaScript
 
 Install via npm, require the module and `.use` the result of the function.
 
