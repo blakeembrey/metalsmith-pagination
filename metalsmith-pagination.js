@@ -26,18 +26,8 @@ module.exports = function (options) {
 
     // Iterate over all the paginate names and match with collections.
     var complete = keys.every(function (name) {
-      var collection
-
-      // Catch nested collection reference errors.
-      try {
-        collection = toFn(name)(metadata)
-      } catch (error) {}
-
-      if (!collection) {
-        done(new TypeError('Collection not found (' + name + ')'))
-
-        return false
-      }
+      var collName = name.replace(/collections\./, ''),
+          collection = metadata.collections[collName];
 
       var pageOptions = extend(DEFAULTS, options[name])
       var toShow = collection
