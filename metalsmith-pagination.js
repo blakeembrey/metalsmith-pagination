@@ -26,9 +26,13 @@ module.exports = function (options) {
 
     // Iterate over all the paginate names and match with collections.
     var complete = keys.every(function (name) {
-      var collName = name.replace(/collections\./, ''),
-          collection = metadata.collections[collName];
-
+      var collName = name.replace(/collections\./, '');
+      
+      // If a metalsmith collection does not exist in the passed in
+      // collecttion pagination definitions, skip over it
+      if (!metadata.collections.hasOwnProperty(collName)) return true;
+          
+      var collection = metadata.collections[collName];
       var pageOptions = extend(DEFAULTS, options[name])
       var toShow = collection
       var groupBy = toFn(pageOptions.groupBy || groupByPagination)
