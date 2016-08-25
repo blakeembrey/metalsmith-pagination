@@ -163,7 +163,7 @@ module.exports = function (options) {
 function interpolate (path, data) {
   var result = path
   Object.keys(data).forEach(function (param) {
-    result = result.replace(new RegExp(':' + param, 'g'), data[param])
+    result = result.replace(new RegExp('{' + param + '}', 'g'), data[param])
   })
   return result
 }
