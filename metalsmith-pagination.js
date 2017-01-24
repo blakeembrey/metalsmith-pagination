@@ -26,19 +26,13 @@ module.exports = function (options) {
 
     // Iterate over all the paginate names and match with collections.
     var complete = keys.every(function (name) {
-      var collection
-
-      // Catch nested collection reference errors.
-      try {
-        collection = toFn(name)(metadata)
-      } catch (error) {}
-
-      if (!collection) {
-        done(new TypeError('Collection not found (' + name + ')'))
-
-        return false
-      }
-
+      var collName = name.replace(/collections\./, '');
+      
+      // If a metalsmith collection does not exist in the passed in
+      // collecttion pagination definitions, skip over it
+      if (!metadata.collections.hasOwnProperty(collName)) return true;
+          
+      var collection = metadata.collections[collName];
       var pageOptions = extend(DEFAULTS, options[name])
       var toShow = collection
       var groupBy = toFn(pageOptions.groupBy || groupByPagination)
@@ -174,7 +168,16 @@ function interpolate (path, data) {
  * @return {number}
  */
 function groupByPagination (file, index, options) {
-  return Math.ceil((index + 1) / options.perPage)
+  // If options.perPage is a single value, all pages have the same 
+  // number of results per page
+  if (!Array.isArray(options.perPage)) {
+    return Math.ceil((index + 1) / options.perPage)
+    
+  // Otherwise options.perPage[0] is number of results for 1st page, 
+  // options.perPage[1] is number of results for all other pages
+  } else {
+    return (index < options.perPage[0] ? 1 : (Math.ceil((index - options.perPage[0] + 1) / options.perPage[1]))+1);
+  }
 }
 
 /**

@@ -1,6 +1,6 @@
 {
-  "name": "metalsmith-pagination",
-  "version": "1.4.0",
+  "name": "@theladbiblegroup/metalsmith-pagination",
+  "version": "1.4.2",
   "description": "A Metalsmith plugin for paginating arrays and collections.",
   "main": "metalsmith-pagination.js",
   "scripts": {
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/blakeembrey/metalsmith-pagination.git"
+    "url": "https://github.com/TheLADbibleGroup/metalsmith-pagination"
   },
   "keywords": [
     "metalsmith",
