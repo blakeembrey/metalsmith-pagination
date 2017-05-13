@@ -24,13 +24,13 @@ describe('metalsmith collections paginate', function () {
     var metadata = {
       collections: {
         articles: [
-          { contents: '' },
-          { contents: '' },
-          { contents: '' },
-          { contents: '' },
-          { contents: '' },
-          { contents: '' },
-          { contents: '' }
+          {contents: ''},
+          {contents: ''},
+          {contents: ''},
+          {contents: ''},
+          {contents: ''},
+          {contents: ''},
+          {contents: ''}
         ]
       }
     }
@@ -174,6 +174,26 @@ describe('metalsmith collections paginate', function () {
         return done(err)
       })
     })
+
+    it('should replace path arguments correctly', function (done) {
+      return paginate({
+        'collections.articles': {
+          template: 'index.jade',
+          first: 'index.html',
+          path: 'page/:numen.html'
+        }
+      })(files, metalsmith, function (err) {
+        var firstPage = files['index.html']
+        var pageOne = files['page/1en.html']
+
+        expect(firstPage).to.exist
+        expect(firstPage.pagination.files.length).to.equal(7)
+
+        expect(pageOne).to.exist
+
+        return done(err)
+      })
+    })
   })
 
   describe('group by', function () {
@@ -182,9 +202,9 @@ describe('metalsmith collections paginate', function () {
     var metadata = {
       collections: {
         articles: [
-          { contents: '', date: new Date(2014, 10, 7) },
-          { contents: '', date: new Date(2014, 11, 12) },
-          { contents: '', date: new Date(2015, 9, 23) }
+          {contents: '', date: new Date(2014, 10, 7)},
+          {contents: '', date: new Date(2014, 11, 12)},
+          {contents: '', date: new Date(2015, 9, 23)}
         ]
       }
     }
@@ -227,13 +247,13 @@ describe('metalsmith collections paginate', function () {
     var metadata = {
       collections: {
         articles: [
-          { contents: '', hide: true },
-          { contents: '', hide: true },
-          { contents: '', hide: true },
-          { contents: '', hide: false },
-          { contents: '', hide: false },
-          { contents: '', hide: false },
-          { contents: '', hide: false }
+          {contents: '', hide: true},
+          {contents: '', hide: true},
+          {contents: '', hide: true},
+          {contents: '', hide: false},
+          {contents: '', hide: false},
+          {contents: '', hide: false},
+          {contents: '', hide: false}
         ]
       }
     }
@@ -429,7 +449,7 @@ describe('metalsmith collections paginate', function () {
           noPageOne: true,
           path: '123'
         }
-      })({}, instance({ posts: [] }), function (err) {
+      })({}, instance({posts: []}), function (err) {
         expect(err).to.exist
         expect(err.message).to.equal('When `noPageOne` is enabled, a first page must be set (posts)')
 
