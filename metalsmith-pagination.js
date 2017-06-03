@@ -31,7 +31,8 @@ module.exports = function (options) {
       // Catch nested collection reference errors.
       try {
         collection = toFn(name)(metadata)
-      } catch (error) {}
+      } catch (error) {
+      }
 
       if (!collection) {
         done(new TypeError('Collection not found (' + name + ')'))
@@ -160,9 +161,11 @@ module.exports = function (options) {
  * @return {String}
  */
 function interpolate (path, data) {
-  return path.replace(/:(\w+)/g, function (match, param) {
-    return data[param]
+  var result = path
+  Object.keys(data).forEach(function (param) {
+    result = result.replace(new RegExp('{' + param + '}', 'g'), data[param])
   })
+  return result
 }
 
 /**
