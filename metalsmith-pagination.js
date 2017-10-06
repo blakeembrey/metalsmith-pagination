@@ -9,7 +9,7 @@ var extend = require('xtend')
 var DEFAULTS = {
   perPage: 10,
   noPageOne: false,
-  pageContents: new Buffer('')
+  pageContents: Buffer.from('')
 }
 
 /**

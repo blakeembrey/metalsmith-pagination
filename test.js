@@ -55,26 +55,26 @@ describe('metalsmith collections paginate', function () {
         var pageTwo = files['articles/page/2/index.html']
         var pageThree = files['articles/page/3/index.html']
 
-        expect(firstPage).to.exist
+        expect(firstPage).to.not.equal(undefined)
         expect(firstPage).to.not.equal(pageOne)
         expect(firstPage.pagination.index).to.equal(0)
         expect(firstPage.pagination.num).to.equal(1)
         expect(firstPage.pagination.name).to.equal('1')
         expect(firstPage.pagination.next).to.equal(pageTwo)
-        expect(firstPage.pagination.previous).to.not.exist
+        expect(firstPage.pagination.previous).to.equal(undefined)
         expect(firstPage.pagination.first).to.equal(firstPage)
         expect(firstPage.pagination.last).to.equal(pageThree)
 
-        expect(pageOne).to.exist
+        expect(pageOne).to.not.equal(undefined)
         expect(pageOne.pagination.index).to.equal(0)
         expect(pageOne.pagination.num).to.equal(1)
         expect(pageOne.pagination.name).to.equal('1')
         expect(pageOne.pagination.next).to.equal(pageTwo)
-        expect(pageOne.pagination.previous).to.not.exist
+        expect(pageOne.pagination.previous).to.equal(undefined)
         expect(pageOne.pagination.first).to.equal(firstPage)
         expect(pageOne.pagination.last).to.equal(pageThree)
 
-        expect(pageTwo).to.exist
+        expect(pageTwo).to.not.equal(undefined)
         expect(pageTwo.pagination.index).to.equal(1)
         expect(pageTwo.pagination.num).to.equal(2)
         expect(pageTwo.pagination.name).to.equal('2')
@@ -83,11 +83,11 @@ describe('metalsmith collections paginate', function () {
         expect(pageTwo.pagination.first).to.equal(firstPage)
         expect(pageTwo.pagination.last).to.equal(pageThree)
 
-        expect(pageThree).to.exist
+        expect(pageThree).to.not.equal(undefined)
         expect(pageThree.pagination.index).to.equal(2)
         expect(pageThree.pagination.num).to.equal(3)
         expect(pageThree.pagination.name).to.equal('3')
-        expect(pageThree.pagination.next).to.not.exist
+        expect(pageThree.pagination.next).to.equal(undefined)
         expect(pageThree.pagination.previous).to.equal(pageTwo)
         expect(pageThree.pagination.first).to.equal(firstPage)
         expect(pageThree.pagination.last).to.equal(pageThree)
@@ -133,19 +133,19 @@ describe('metalsmith collections paginate', function () {
         var pageTwo = files['articles/page/2/index.html']
         var pageThree = files['articles/page/3/index.html']
 
-        expect(firstPage).to.not.exist
+        expect(firstPage).to.equal(undefined)
 
-        expect(pageOne).to.exist
+        expect(pageOne).to.not.equal(undefined)
         expect(pageOne.contents).to.equal('foobar')
         expect(pageOne.foo).to.equal('bar')
         expect(pageOne.some.thing).to.equal(true)
 
-        expect(pageTwo).to.exist
+        expect(pageTwo).to.not.equal(undefined)
         expect(pageTwo.contents).to.equal('foobar')
         expect(pageTwo.foo).to.equal('bar')
         expect(pageTwo.some.thing).to.equal(true)
 
-        expect(pageThree).to.exist
+        expect(pageThree).to.not.equal(undefined)
         expect(pageThree.contents).to.equal('foobar')
         expect(pageThree.foo).to.equal('bar')
         expect(pageThree.some.thing).to.equal(true)
@@ -166,10 +166,10 @@ describe('metalsmith collections paginate', function () {
         var firstPage = files['index.html']
         var pageOne = files['page/1/index.html']
 
-        expect(firstPage).to.exist
+        expect(firstPage).to.not.equal(undefined)
         expect(firstPage.pagination.files.length).to.equal(7)
 
-        expect(pageOne).to.not.exist
+        expect(pageOne).to.equal(undefined)
 
         return done(err)
       })
@@ -206,12 +206,12 @@ describe('metalsmith collections paginate', function () {
         var pageOne = files['articles/2014/index.html']
         var pageTwo = files['articles/2015/index.html']
 
-        expect(pageOne).to.exist
+        expect(pageOne).to.not.equal(undefined)
         expect(pageOne.pagination.num).to.equal(1)
         expect(pageOne.pagination.name).to.equal('2014')
         expect(pageOne.pagination.files.length).to.equal(2)
 
-        expect(pageTwo).to.exist
+        expect(pageTwo).to.not.equal(undefined)
         expect(pageTwo.pagination.num).to.equal(2)
         expect(pageTwo.pagination.name).to.equal('2015')
         expect(pageTwo.pagination.files.length).to.equal(1)
@@ -258,16 +258,16 @@ describe('metalsmith collections paginate', function () {
         var pageTwo = files['articles/page/2/index.html']
         var pageThree = files['articles/page/3/index.html']
 
-        expect(firstPage).to.exist
+        expect(firstPage).to.not.equal(undefined)
         expect(firstPage.pagination.files.length).to.equal(3)
 
-        expect(pageOne).to.exist
+        expect(pageOne).to.not.equal(undefined)
         expect(pageOne.pagination.files.length).to.equal(3)
 
-        expect(pageTwo).to.exist
+        expect(pageTwo).to.not.equal(undefined)
         expect(pageTwo.pagination.files.length).to.equal(3)
 
-        expect(pageThree).to.exist
+        expect(pageThree).to.not.equal(undefined)
         expect(pageThree.pagination.files.length).to.equal(1)
 
         return done(err)
@@ -291,16 +291,16 @@ describe('metalsmith collections paginate', function () {
         var pageTwo = files['articles/page/2/index.html']
         var pageThree = files['articles/page/3/index.html']
 
-        expect(firstPage).to.exist
+        expect(firstPage).to.not.equal(undefined)
         expect(firstPage.pagination.files.length).to.equal(3)
 
-        expect(pageOne).to.exist
+        expect(pageOne).to.not.equal(undefined)
         expect(pageOne.pagination.files.length).to.equal(3)
 
-        expect(pageTwo).to.exist
+        expect(pageTwo).to.not.equal(undefined)
         expect(pageTwo.pagination.files.length).to.equal(1)
 
-        expect(pageThree).to.not.exist
+        expect(pageThree).to.equal(undefined)
 
         return done(err)
       })
@@ -323,16 +323,16 @@ describe('metalsmith collections paginate', function () {
         var pageTwo = files['articles/page/2/index.html']
         var pageThree = files['articles/page/3/index.html']
 
-        expect(firstPage).to.exist
+        expect(firstPage).to.not.equal(undefined)
         expect(firstPage.pagination.files.length).to.equal(3)
 
-        expect(pageOne).to.exist
+        expect(pageOne).to.not.equal(undefined)
         expect(pageOne.pagination.files.length).to.equal(3)
 
-        expect(pageTwo).to.exist
+        expect(pageTwo).to.not.equal(undefined)
         expect(pageTwo.pagination.files.length).to.equal(1)
 
-        expect(pageThree).to.not.exist
+        expect(pageThree).to.equal(undefined)
 
         return done(err)
       })
@@ -349,7 +349,7 @@ describe('metalsmith collections paginate', function () {
           template: 'index.jade'
         }
       })(files, metalsmith, function (err) {
-        expect(err).to.exist
+        expect(err).to.not.equal(undefined)
         expect(err.message).to.equal('Collection not found (articles)')
 
         return done()
@@ -362,7 +362,7 @@ describe('metalsmith collections paginate', function () {
           template: 'index.jade'
         }
       })(files, metalsmith, function (err) {
-        expect(err).to.exist
+        expect(err).to.not.equal(undefined)
         expect(err.message).to.equal('Collection not found (collections.articles)')
 
         return done()
@@ -379,7 +379,7 @@ describe('metalsmith collections paginate', function () {
           articles: []
         }
       }), function (err) {
-        expect(err).to.exist
+        expect(err).to.not.equal(undefined)
         expect(err.message).to.equal('A template or layout is required (collections.articles)')
 
         return done()
@@ -396,7 +396,7 @@ describe('metalsmith collections paginate', function () {
           articles: []
         }
       }), function (err) {
-        expect(err).to.exist
+        expect(err).to.not.equal(undefined)
         expect(err.message).to.equal('The path is required (collections.articles)')
 
         return done()
@@ -415,7 +415,7 @@ describe('metalsmith collections paginate', function () {
           articles: []
         }
       }), function (err) {
-        expect(err).to.exist
+        expect(err).to.not.equal(undefined)
         expect(err.message).to.equal('Template and layout can not be used simultaneosly (collections.articles)')
 
         return done()
@@ -430,7 +430,7 @@ describe('metalsmith collections paginate', function () {
           path: '123'
         }
       })({}, instance({ posts: [] }), function (err) {
-        expect(err).to.exist
+        expect(err).to.not.equal(undefined)
         expect(err.message).to.equal('When `noPageOne` is enabled, a first page must be set (posts)')
 
         return done()
