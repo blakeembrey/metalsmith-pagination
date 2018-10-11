@@ -76,7 +76,7 @@ metalsmith.use(pagination({
 * **filter** A string or function used to filter files in pagination.
 * **pageMetadata** The metadata to merge with every page.
 * **noPageOne** Set to true to disable rendering of page one, useful in conjunction with first (default: `false`).
-* **pageContents** Set the contents of generated pages (default: `new Buffer('')`). Useful for [metalsmith-in-place](https://npmjs.org/package/metalsmith-in-place) (especially with `pageMetadata`).
+* **pageContents** Set the contents of generated pages (default: `Buffer.from('')`). Useful for [metalsmith-in-place](https://npmjs.org/package/metalsmith-in-place) (especially with `pageMetadata`).
 * **groupBy** Set the grouping algorithm manually (default: paginated by `perPage`). Useful for paginating by other factors, like year published (E.g. `date.getFullYear()`).
 
 ### Page Metadata
