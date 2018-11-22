@@ -380,7 +380,7 @@ describe('metalsmith collections paginate', function () {
         }
       }), function (err) {
         expect(err).to.not.equal(undefined)
-        expect(err.message).to.equal('A template or layout is required (collections.articles)')
+        expect(err.message).to.equal('A template, layout or pageContents option is required (collections.articles)')
 
         return done()
       })
