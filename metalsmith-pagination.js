@@ -8,8 +8,7 @@ var extend = require('xtend')
  */
 var DEFAULTS = {
   perPage: 10,
-  noPageOne: false,
-  pageContents: Buffer.from('')
+  noPageOne: false
 }
 
 /**
@@ -47,8 +46,8 @@ module.exports = function (options) {
         toShow = collection.filter(toFn(pageOptions.filter))
       }
 
-      if (!pageOptions.template && !pageOptions.layout) {
-        done(new TypeError('A template or layout is required (' + name + ')'))
+      if (!pageOptions.template && !pageOptions.layout && !pageOptions.pageContents) {
+        done(new TypeError('A template, layout or pageContents option is required (' + name + ')'))
 
         return false
       }
@@ -103,7 +102,7 @@ module.exports = function (options) {
           var page = extend(pageOptions.pageMetadata, {
             template: pageOptions.template,
             layout: pageOptions.layout,
-            contents: pageOptions.pageContents,
+            contents: pageOptions.pageContents || Buffer.from(''),
             path: interpolate(pageOptions.path, pagination),
             pagination: pagination
           })
