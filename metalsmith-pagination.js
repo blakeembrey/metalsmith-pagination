@@ -54,7 +54,7 @@ module.exports = function (options) {
 
       if (pageOptions.template && pageOptions.layout) {
         done(new TypeError(
-          'Template and layout can not be used simultaneosly (' + name + ')'
+          'Template and layout can not be used simultaneously (' + name + ')'
         ))
 
         return false

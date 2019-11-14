@@ -416,7 +416,7 @@ describe('metalsmith collections paginate', function () {
         }
       }), function (err) {
         expect(err).to.not.equal(undefined)
-        expect(err.message).to.equal('Template and layout can not be used simultaneosly (collections.articles)')
+        expect(err.message).to.equal('Template and layout can not be used simultaneously (collections.articles)')
 
         return done()
       })
