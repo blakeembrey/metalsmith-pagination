@@ -1,6 +1,6 @@
 {
   "name": "metalsmith-pagination",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "A Metalsmith plugin for paginating arrays and collections.",
   "main": "metalsmith-pagination.js",
   "scripts": {
