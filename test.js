@@ -424,7 +424,7 @@ describe('metalsmith collections paginate', function () {
 
     it('should error when `noPageOne` is enabled, but `first` is missing', function (done) {
       return paginate({
-        'posts': {
+        posts: {
           template: 'index.jade',
           noPageOne: true,
           path: '123'

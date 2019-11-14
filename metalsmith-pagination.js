@@ -85,7 +85,7 @@ module.exports = function (options) {
 
         // Keep pages in the order they are returned. E.g. Allows sorting
         // by published year to work.
-        if (!pageMap.hasOwnProperty(name)) {
+        if (!Object.prototype.hasOwnProperty.call(pageMap, name)) {
           // Use the index to calculate pagination, page numbers, etc.
           var length = pages.length
 
@@ -139,7 +139,7 @@ module.exports = function (options) {
       })
 
       // Add page utilities.
-      pages.forEach(function (page, index) {
+      pages.forEach(function (page) {
         page.pagination.first = pages[0]
         page.pagination.last = pages[pages.length - 1]
       })
