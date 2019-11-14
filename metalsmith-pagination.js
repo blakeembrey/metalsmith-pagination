@@ -138,7 +138,7 @@ function createPagination (pages, files, name, pageOptions) {
   var page = extend(pageOptions.pageMetadata, {
     template: pageOptions.template,
     layout: pageOptions.layout,
-    contents: pageOptions.pageContents || Buffer.from(''),
+    contents: Buffer.from(pageOptions.pageContents || ''),
     path: interpolate(pageOptions.path, pagination),
     pagination: pagination
   })

@@ -136,17 +136,17 @@ describe('metalsmith collections paginate', function () {
         expect(firstPage).to.equal(undefined)
 
         expect(pageOne).to.not.equal(undefined)
-        expect(pageOne.contents).to.equal('foobar')
+        expect(pageOne.contents).to.deep.equal(Buffer.from('foobar'))
         expect(pageOne.foo).to.equal('bar')
         expect(pageOne.some.thing).to.equal(true)
 
         expect(pageTwo).to.not.equal(undefined)
-        expect(pageTwo.contents).to.equal('foobar')
+        expect(pageTwo.contents).to.deep.equal(Buffer.from('foobar'))
         expect(pageTwo.foo).to.equal('bar')
         expect(pageTwo.some.thing).to.equal(true)
 
         expect(pageThree).to.not.equal(undefined)
-        expect(pageThree.contents).to.equal('foobar')
+        expect(pageThree.contents).to.deep.equal(Buffer.from('foobar'))
         expect(pageThree.foo).to.equal('bar')
         expect(pageThree.some.thing).to.equal(true)
 
