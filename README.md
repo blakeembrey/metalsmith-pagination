@@ -68,15 +68,16 @@ metalsmith.use(pagination({
 ### Options
 
 * **perPage** The number of files per page (default: `10`).
-* **template** The template metadata for [metalsmith-templates](https://npmjs.org/package/metalsmith-templates).
-* **layout** The layout metadata for [metalsmith-layouts](https://npmjs.org/package/metalsmith-layouts).
 * **first** An optional path to use in place of the page one (E.g. Render as the homepage `index.html`, instead of `page/1/index.html`).
-* **path** The path to render every page under. Interpolated with the `pagination` object, so you can use `:name`, `:num`, `:index`, etc.
+* **path** The path to render every page under. Interpolated with the `pagination` object, so you can use `:name`, `:num` or `:index`.
 * **filter** A string or function used to filter files in pagination.
 * **pageMetadata** The metadata to merge with every page.
 * **noPageOne** Set to true to disable rendering of page one, useful in conjunction with first (default: `false`).
-* **pageContents** Set the contents of generated pages (default: `Buffer.from('')`). Useful for [metalsmith-in-place](https://npmjs.org/package/metalsmith-in-place) (especially with `pageMetadata`).
 * **groupBy** Set the grouping algorithm manually (default: paginated by `perPage`). Useful for paginating by other factors, like year published (E.g. `date.getFullYear()`).
+* **empty** Allows empty pages for collections. This will also be used as the `file` passed to `groupBy` to get the page name.
+* **template** The template metadata for [metalsmith-templates](https://npmjs.org/package/metalsmith-templates).
+* **layout** The layout metadata for [metalsmith-layouts](https://npmjs.org/package/metalsmith-layouts).
+* **pageContents** Set the contents of generated pages (default: `Buffer.from('')`). Useful for [metalsmith-in-place](https://npmjs.org/package/metalsmith-in-place) (especially with `pageMetadata`).
 
 ### Page Metadata
 

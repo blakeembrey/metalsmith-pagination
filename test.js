@@ -221,6 +221,63 @@ describe('metalsmith collections paginate', function () {
     })
   })
 
+  describe('empty collection', function () {
+    var files
+
+    var metadata = {
+      collections: {
+        articles: []
+      }
+    }
+
+    var metalsmith = instance(metadata)
+
+    beforeEach(function () {
+      files = {}
+    })
+
+    it('should allow empty page', function (done) {
+      return paginate({
+        'collections.articles': {
+          template: 'index.jade',
+          path: 'articles/:name/index.html',
+          empty: true
+        }
+      })(files, metalsmith, function (err) {
+        var pageOne = files['articles/1/index.html']
+
+        expect(pageOne).to.not.equal(undefined)
+        expect(pageOne.pagination.num).to.equal(1)
+        expect(pageOne.pagination.name).to.equal('1')
+        expect(pageOne.pagination.files.length).to.equal(0)
+
+        return done(err)
+      })
+    })
+
+    it('should allow empty page specification', function (done) {
+      return paginate({
+        'collections.articles': {
+          groupBy: 'date.getFullYear()',
+          template: 'index.jade',
+          path: 'articles/:name/index.html',
+          empty: {
+            date: new Date(2019, 1, 1)
+          }
+        }
+      })(files, metalsmith, function (err) {
+        var pageOne = files['articles/2019/index.html']
+
+        expect(pageOne).to.not.equal(undefined)
+        expect(pageOne.pagination.num).to.equal(1)
+        expect(pageOne.pagination.name).to.equal('2019')
+        expect(pageOne.pagination.files.length).to.equal(0)
+
+        return done(err)
+      })
+    })
+  })
+
   describe('filtering', function () {
     var files
 

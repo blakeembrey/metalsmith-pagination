@@ -26,6 +26,7 @@ module.exports = function (options) {
     // Iterate over all the paginate names and match with collections.
     var complete = keys.every(function (name) {
       var collection
+      var pageOptions = extend(DEFAULTS, options[name])
 
       // Catch nested collection reference errors.
       try {
@@ -38,7 +39,6 @@ module.exports = function (options) {
         return false
       }
 
-      var pageOptions = extend(DEFAULTS, options[name])
       var toShow = collection
       var groupBy = toFn(pageOptions.groupBy || groupByPagination)
 
@@ -79,6 +79,11 @@ module.exports = function (options) {
       var pages = collection.pages = []
       var pageMap = {}
 
+      if (toShow.length === 0 && pageOptions.empty) {
+        var pageName = String(groupBy(pageOptions.empty, 0, pageOptions))
+        pageMap[pageName] = createPagination(pages, files, pageName, pageOptions)
+      }
+
       // Sort pages into "categories".
       toShow.forEach(function (file, index) {
         var name = String(groupBy(file, index, pageOptions))
@@ -86,52 +91,10 @@ module.exports = function (options) {
         // Keep pages in the order they are returned. E.g. Allows sorting
         // by published year to work.
         if (!Object.prototype.hasOwnProperty.call(pageMap, name)) {
-          // Use the index to calculate pagination, page numbers, etc.
-          var length = pages.length
-
-          var pagination = {
-            name: name,
-            index: length,
-            num: length + 1,
-            pages: pages,
-            files: [],
-            getPages: createPagesUtility(pages, length)
-          }
-
-          // Generate the page data.
-          var page = extend(pageOptions.pageMetadata, {
-            template: pageOptions.template,
-            layout: pageOptions.layout,
-            contents: pageOptions.pageContents || Buffer.from(''),
-            path: interpolate(pageOptions.path, pagination),
-            pagination: pagination
-          })
-
+          const pagination = createPagination(pages, files, name, pageOptions)
+          pageMap[name] = pagination
           // Copy collection metadata onto every page "collection".
           pagination.files.metadata = collection.metadata
-
-          if (length === 0) {
-            if (!pageOptions.noPageOne) {
-              files[page.path] = page
-            }
-
-            if (pageOptions.first) {
-              // Extend the "first page" over the top of "page one".
-              page = extend(page, {
-                path: interpolate(pageOptions.first, page.pagination)
-              })
-
-              files[page.path] = page
-            }
-          } else {
-            files[page.path] = page
-
-            page.pagination.previous = pages[length - 1]
-            pages[length - 1].pagination.next = page
-          }
-
-          pages.push(page)
-          pageMap[name] = pagination
         }
 
         // Files are kept sorted within their own category.
@@ -149,6 +112,60 @@ module.exports = function (options) {
 
     return complete && done()
   }
+}
+
+/**
+ * Create a pagination object.
+ *
+ * @param {Array}  pages
+ * @param {Array}  files
+ * @param {String} name
+ * @param {Object} pageOptions
+ */
+function createPagination (pages, files, name, pageOptions) {
+  var length = pages.length
+
+  var pagination = {
+    name: name,
+    index: length,
+    num: length + 1,
+    pages: pages,
+    files: [],
+    getPages: createPagesUtility(pages, length)
+  }
+
+  // Generate the page data.
+  var page = extend(pageOptions.pageMetadata, {
+    template: pageOptions.template,
+    layout: pageOptions.layout,
+    contents: pageOptions.pageContents || Buffer.from(''),
+    path: interpolate(pageOptions.path, pagination),
+    pagination: pagination
+  })
+
+  if (length === 0) {
+    if (!pageOptions.noPageOne) {
+      files[page.path] = page
+    }
+
+    if (pageOptions.first) {
+      // Extend the "first page" over the top of "page one".
+      page = extend(page, {
+        path: interpolate(pageOptions.first, page.pagination)
+      })
+
+      files[page.path] = page
+    }
+  } else {
+    files[page.path] = page
+
+    page.pagination.previous = pages[length - 1]
+    pages[length - 1].pagination.next = page
+  }
+
+  pages.push(page)
+
+  return pagination
 }
 
 /**
